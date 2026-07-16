@@ -1,130 +1,90 @@
 # Restaurant Website
 
-A modern restaurant website built with Next.js, React, Tailwind CSS, and Express.js.
+This project is a restaurant web application built with Next.js, React, Tailwind CSS, and a small Express/MongoDB server for legacy API support. It includes a public customer-facing site, an admin area, reusable UI components, and supporting scripts for database and account setup.
 
-## Features
+## What The App Does
 
-- **Homepage** with hero section, about section, featured menu items, and testimonials
-- **Menu page** with filtering by categories and search functionality
-- **Contact page** with contact form and information
-- **Reservation page** with table booking functionality
-- **Support chatbot** powered by OpenAI for instant customer assistance
-- **Admin section**:
-  - Admin login with Supabase authentication
-  - Custom admin tables for fine-grained access control
-  - Secure authentication with bcryptjs password hashing
-  - Admin dashboard with statistics and quick actions
-  - Reservation management
-- **Dark/Light Mode** toggle functionality
-- **Responsive Design** that works across devices
+The application provides a full restaurant experience:
 
-## Technology Stack
+- A marketing homepage with hero content, featured items, and supporting sections
+- A browsable menu with category filtering and search
+- Reservation and contact flows for customers
+- A support chatbot powered by OpenAI
+- An admin dashboard for managing menu items and reservations
+- Authentication and route protection for admin pages
+
+## Tech Stack
 
 - **Frontend**: Next.js, React, Tailwind CSS
-- **Backend**: Express.js, MongoDB, Supabase
-- **Authentication**: JWT (JSON Web Tokens)
-- **API**: REST API with Next.js API routes
-- **AI**: OpenAI API for intelligent chatbot assistant
-
-## Authentication System
-
-The admin authentication system uses a secure Supabase table for storing admin credentials:
-
-- **Admin Table**: Stores admin accounts with secure password hashing
-- **Middleware**: Protects admin routes with token-based authentication
-- **Auth Utilities**: Provides tools for verifying tokens and checking permissions
-
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **State and UI helpers**: React Context, Framer Motion, Lucide icons, Chart.js
+- **Data and auth**: Supabase, bcryptjs, jsonwebtoken
+- **Server support**: Express.js, MongoDB via Mongoose
+- **AI**: OpenAI and Azure AI inference packages
+- **Testing**: Jest, React Testing Library, Supertest
 
 ## Project Structure
 
-- `src/app/*`: Next.js app router pages and components
-- `src/app/api/*`: API routes for handling data
-- `src/app/components/*`: Reusable UI components
-- `src/app/context/*`: React context providers
-- `src/app/services/*`: API service functions
-- `src/app/lib/*`: Utility functions
-- `server.js`: Express.js server configuration
+The codebase is organized by feature and responsibility:
 
-## Setup Instructions
+- `src/app/page.js`: Public homepage
+- `src/app/menu/page.js`: Menu browsing and filtering
+- `src/app/contact/page.js`: Contact form and details
+- `src/app/reservation/page.js`: Reservation flow
+- `src/app/support/page.js`: Support/chat experience
+- `src/app/checkout/page.js`: Checkout flow
+- `src/app/admin/*`: Admin layout, login, dashboard, reports, menu, and reservation screens
+- `src/app/api/*`: Next.js API routes for menu, reservations, auth, chat, and validation endpoints
+- `src/app/components/*`: Reusable UI components such as navbar, footer, cart sidebar, auth modal, and chat message
+- `src/app/context/*`: React context providers for auth, cart, customer auth, and theme state
+- `src/app/lib/*`: Shared utilities for auth, Supabase, formatting, AI integration, and middleware helpers
+- `src/app/services/*`: Higher-level service wrappers used by the app UI
+- `src/app/middleware/*`: Admin middleware helpers
+- `src/app/utils/*`: General-purpose utility functions
+- `setup/*`: Database, admin, and verification scripts used during local setup
+- `__tests__/*`: Unit and integration-style tests for API routes, components, pages, and utilities
+- `server.js`: Standalone Express server with MongoDB-backed routes
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+## How The Pieces Fit Together
 
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
+The public UI lives in the Next.js app router under `src/app`. UI pages call shared service modules in `src/app/services` and `src/app/lib`, which wrap Supabase access, auth checks, formatting, and chatbot helpers.
 
+The admin area uses the same app router structure, but it is protected by middleware and authentication helpers. Supporting scripts in `setup/` help create admin accounts, initialize database tables, and verify local configuration.
 
+The repository also includes `server.js` for Express-based API support. That file uses MongoDB models for menu items, reservations, and admin logins, which makes the project a hybrid setup rather than a single-server-only Next.js app.
+
+## Getting Started
+
+Install dependencies and start the development server:
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Available Scripts
+
+- `npm run dev`: Start the Next.js development server
+- `npm run build`: Build the application for production
+- `npm start`: Start the production server
+- `npm run lint`: Run lint checks
+- `npm test`: Run the test suite
+- `npm run test:api`: Run API-focused tests
+- `npm run test:components`: Run component-focused tests
+
+## Environment Notes
+
+The app expects environment variables for Supabase, OpenAI or Azure AI integration, and any MongoDB connection used by `server.js`. Check the setup scripts and the source files in `src/app/lib` for the exact values required by each feature.
 
 ## Admin Access
 
-- Default admin credentials:
-  - Username: admin
-  - Password: admin123
+The setup scripts can create a default admin account for local development. If you use the bundled scripts, the common default credentials are:
+
+- Username: `admin`
+- Password: `admin123`
 
 ## Deployment
 
-### Manual Deployment
-
-1. Build the application:
-   ```bash
-   npm run build
-   ```
-
-2. Start the production server:
-   ```bash
-   npm start
-   ```
-
-### Deployment Platforms
-
-This application can be deployed on:
-
-- **Vercel**: Connect your GitHub repository and deploy automatically
-- **Netlify**: Connect your GitHub repository and deploy automatically
-- **AWS**: Deploy using Elastic Beanstalk or EC2
-- **Heroku**: Deploy using the Node.js buildpack
-
-
-## API Endpoints
-
-### Menu Items
-- `GET /api/menu`: Get all menu items
-- `POST /api/menu`: Create a new menu item (admin only)
-- `GET /api/menu/:id`: Get a specific menu item
-- `PUT /api/menu/:id`: Update a menu item (admin only)
-- `DELETE /api/menu/:id`: Delete a menu item (admin only)
-
-### Reservations
-- `POST /api/reservation`: Create a new reservation
-- `GET /api/reservation`: Get all reservations (admin only)
-- `GET /api/reservation/:id`: Get a specific reservation (admin only)
-- `PUT /api/reservation/:id`: Update a reservation (admin only)
-- `PATCH /api/reservation/:id/status`: Update reservation status (admin only)
-
-### Authentication
-- `POST /api/auth/login`: Login for admin access
-
-### Contact
-- `POST /api/contact`: Submit a contact form
+The Next.js app can be deployed on common platforms such as Vercel or Netlify. If you also need the Express backend, deploy `server.js` separately in an environment that supports a Node.js process and MongoDB connectivity.
 
