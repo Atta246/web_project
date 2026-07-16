@@ -1,5 +1,22 @@
 import supabase from '../lib/supabase';
 
+function mapMenuItem(item) {
+  return {
+    id: item.item_id,
+    item_id: item.item_id,
+    name: item.name,
+    description: item.description,
+    price: item.price,
+    category: item.category || 'Uncategorized',
+    category_id: item.category_id || null,
+    image: item.image_url,
+    image_url: item.image_url,
+    is_available: item.is_available !== false,
+    is_featured: item.is_featured || false,
+    preparation_time: item.preparation_time || 0
+  };
+}
+
 // Menu API
 export const menuService = {
   getAllItems: async () => {
@@ -20,21 +37,7 @@ export const menuService = {
         return getSampleMenuItems();
       }
       
-      // Transform the data to match the expected format in the UI
-      return data.map(item => ({
-        id: item.item_id,
-        item_id: item.item_id,
-        name: item.name,
-        description: item.description,
-        price: item.price,
-        category: item.category || 'Uncategorized',
-        category_id: item.category_id || null,
-        image: item.image_url,
-        image_url: item.image_url,
-        is_available: item.is_available !== false,
-        is_featured: item.is_featured || false,
-        preparation_time: item.preparation_time || 0
-      }));
+      return data.map(mapMenuItem);
     } catch (error) {
       console.error('Error fetching menu items:', error);
       // Return sample data if there's any error
@@ -118,21 +121,7 @@ export const menuService = {
 
       if (error) throw new Error(error.message);
 
-      // Transform the response to match the expected format in the UI
-      return {
-        id: data[0].item_id,
-        item_id: data[0].item_id,
-        name: data[0].name,
-        description: data[0].description,
-        price: data[0].price,
-        category: data[0].category,
-        category_id: data[0].category_id || null,
-        image: data[0].image_url,
-        image_url: data[0].image_url,
-        is_available: data[0].is_available !== false,
-        is_featured: data[0].is_featured || false,
-        preparation_time: data[0].preparation_time || 0
-      };
+      return mapMenuItem(data[0]);
     } catch (error) {
       console.error('Error creating menu item:', error);
       throw error;
@@ -162,21 +151,7 @@ export const menuService = {
 
       if (error) throw new Error(error.message);
       
-      // Transform the response to match the expected format in the UI
-      return {
-        id: data[0].item_id,
-        item_id: data[0].item_id,
-        name: data[0].name,
-        description: data[0].description,
-        price: data[0].price,
-        category: data[0].category,
-        category_id: data[0].category_id || null,
-        image: data[0].image_url,
-        image_url: data[0].image_url,
-        is_available: data[0].is_available !== false,
-        is_featured: data[0].is_featured || false,
-        preparation_time: data[0].preparation_time || 0
-      };
+      return mapMenuItem(data[0]);
     } catch (error) {
       console.error(`Error updating menu item ${id}:`, error);
       throw error;
